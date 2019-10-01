@@ -10,8 +10,8 @@
                     <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
                     <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
                     <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
-                    <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
-                    <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
+                    <!-- <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div>
+                    <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6 "> <img src="src/assets/img/wtf5.png"></div> -->
                   </div>
                   <div id="app"></div>
                   <div class="mt-30 row" >
