@@ -35,10 +35,10 @@
     </div>
 
     <div class="container my-4">
-      <h4 class="red-text mt-2">Price: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].price }}</span></h4>
+      <h4 class="red-text mt-2">Price: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].price | formatEth }}</span></h4>
       <h4 class="red-text mt-2">Owner: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].owner }}</span></h4>
-      <h4 class="red-text mt-2">Deposit: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].balance }}</span></h4>
-      <h4 class="red-text mt-2">Redeemable Until: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].until }}</span></h4>
+      <h4 class="red-text mt-2">Deposit: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].balance | formatEth(4) }}</span></h4>
+      <h4 class="red-text mt-2">Redeemable Until: <span class="ml-4 font-weight-thin white-text">{{ (boards[selectedBoard].until) }}</span></h4>
       <h4 class="red-text mt-2">URL: <span class="ml-4 font-weight-thin white-text">{{ boards[selectedBoard].url }}</span></h4>
       <div class="text-center my-5">
         <a v-if="coinbase.toUpperCase() === boards[selectedBoard].owner.toUpperCase()" @click="showUpdateModal = true" class="site-btn big wow fadeInUp" style="font-size:2em; font-weight:bold" data-wow-delay="0.2s">
@@ -55,26 +55,27 @@
        >
        <b-container fluid>
          <div class="w-100">
-           Input a URL of your image /// or upload
-           <div class="firstclass funbtnclass">
+           <div class="firstclass funbtnclass mb-4">
+             Input a URL of your image /// or upload<br>
              <input ref="newURL" type="text" placeholder="URL of your image">
            </div>
-           Current price is {{ boards[selectedBoard].price | formatEth}}<br>
-           How much do you value the space?
-           <div class="firstclass funbtnclass">
-             <input ref="newprice" type="number" step="5" placeholder="Your price, in ETH" v-model="newPrice">
+           <span class="font-weight-bold">Current price is {{ boards[selectedBoard].price | formatEth}}</span><br>
+           <div class="my-4">
+             How much do you value the space?<br>
+             <span class="font-weight-bold">Price in ETH: </span><input ref="newprice" type="number" step="5" placeholder="Your price, in ETH" v-model="newPrice"><br>
+             <span class="font-weight-bold">Price per day: {{ taxPerDay | formatEth(4) }}</span><br>
            </div>
-           <h5>Price per day: {{ taxPerDay | formatEth }}</h5>
-           How many days do you want to pre-pay? This will be taken automatically. Unused deposit can be withdrawn any time.
+           How many days do you want to pre-pay? Fees are taken automatically. Unused deposits can be withdrawn any time.<br>
+           <span class="font-weight-bold">Number of Days</span>
            <input ref="numberOfDays" type="number" placeholder="Number of Days" v-model="numberOfDays">
-           <h3>Total you have to pay: {{ taxPerDay * numberOfDays + newPrice | formatEth }}</h3>
          </div>
        </b-container>
 
        <template v-slot:modal-footer>
          <div class="w-100">
+           <span class="font-weight-bold ml-3 pt-2 my-auto" style="font-size:1.5em; color:black; line-height:2.3em">Total: {{ taxPerDay * numberOfDays + Number(newPrice) | formatEth(4) }}</span>
            <a
-             class="site-btn float-right font-weight-bold"
+             class="site-btn float-right font-weight-bold" style="font-size:1.1em;"
              @click="showBuyModal=false"
            >
              BUY NOW
