@@ -24,8 +24,8 @@
       <div class="row my-4 w-100">
         <h2 class="w-100 text-center mt-4">Click on the billboard you would like to buy</h2>
       </div>
-      <div class="row billboard">
-        <div class="col-xl-1-5 col-lg-3 col-md-4  col-xs-6 col-sm-6"
+      <div class="row no-gutters billboard">
+        <div class="col-xl-1-5 col-lg-3 col-md-4  my-3 mx-auto mx-sm-3  col-xs-6 col-sm-6"
           v-for="(board , index) in boards" :class="['round-buy', 'pointer', selectedBoard===index ? 'selected' : '']" :key="index"  @click="selectedBoard = index">
             <img :src="board.url.cover" alt="ADS" class="round-image">
             <!--p>{{ad.text}}</p-->
@@ -55,19 +55,37 @@
        >
        <b-container fluid>
          <div class="w-100">
-           <div class="firstclass funbtnclass mb-4">
-             Input a URL of your image /// or upload<br>
+
+           Input a URL of your image or upload one.
+           <div class="firstclass funbtnclass">
              <input ref="newURL" type="text" placeholder="URL of your image">
            </div>
-           <span class="font-weight-bold">Current price is {{ boards[selectedBoard].price | formatEth}}</span><br>
-           <div class="my-4">
-             How much do you value the space?<br>
-             <span class="font-weight-bold">Price in ETH: </span><input ref="newprice" type="number" step="5" placeholder="Your price, in ETH" v-model="newPrice"><br>
-             <span class="font-weight-bold">Price per day: {{ taxPerDay | formatEth(4) }}</span><br>
+
+          <div class="billboard-slide">
+            <div class="billboard-img">
+              <input ref="file" type="file" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp" @change="upload">
+              <img v-if="!cover" id="billboardAdd" class="add" src="../assets/upload/add.png" alt="add" @click="uploadAdd">
+              <img v-if="cover" id="billboardCover" class="cover" :src="cover" alt="cover">
+              <div v-if="cover" id="billboardDel" class="full" @click="cover = ''">
+                <img class="del" src="../assets/upload/del.png" alt="del">
+              </div>
+              <div v-if="loading" id="billboardLoading" class="full-loading">
+                Uploading...
+              </div>
+            </div>
+          </div>
+
+           Current price: {{ boards[selectedBoard].price | formatEth}}<br>
+
+           <div class="firstclass funbtnclass">
+             Your price in ether: <input ref="newprice" type="number" step="5" placeholder="Your price, in ETH" v-model="newPrice">
            </div>
-           How many days do you want to pre-pay? Fees are taken automatically. Unused deposits can be withdrawn any time.<br>
-           <span class="font-weight-bold">Number of Days</span>
-           <input ref="numberOfDays" type="number" placeholder="Number of Days" v-model="numberOfDays">
+           <div class="firstclass funbtnclass">
+            How many days want to HODL? <input ref="numberOfDays" type="number" placeholder="Number of Days" v-model="numberOfDays">
+          </div>
+            This will be taken automatically. Unused deposit can be withdrawn any time.<br>
+           Price per day: {{ taxPerDay | formatEth }} <br>
+           Total you have to pay: {{ taxPerDay * numberOfDays + newPrice | formatEth }}
          </div>
        </b-container>
 
@@ -75,8 +93,8 @@
          <div class="w-100">
            <span class="font-weight-bold ml-3 pt-2 my-auto" style="font-size:1.5em; color:black; line-height:2.3em">Total: {{ taxPerDay * numberOfDays + Number(newPrice) | formatEth(4) }}</span>
            <a
-             class="site-btn float-right font-weight-bold" style="font-size:1.1em;"
-             @click="showBuyModal=false"
+             class="site-btn float-right font-weight-bold"
+             @click="buy"
            >
              BUY NOW
            </a>
@@ -85,40 +103,28 @@
      </b-modal>
      <b-modal
       v-model="showUpdateModal"
-      title="Buy Billboard"
+      title="Update Billboard"
       >
       <b-container fluid>
         <div class="w-100">
           <div class="firstclass funbtnclass">
-            <ul class="ulinputclass">
-              <li class="liinputclass">
-                <input ref="newprice" type="number"  step="0.01" placeholder="new price in ETH">
-                <button class="confirmbuttonclass" @click="">
-                  Change
-                </button>
-              </li>
-            </ul>
+            <input ref="newprice" type="number"  step="0.01" placeholder="new price in ETH">
+            <button class="confirmbuttonclass" @click="">
+              Change
+            </button>
           </div>
 
           <div class="firstclass funbtnclass">
-            <ul class="ulinputclass">
-              <li class="liinputclass">
-                <input ref="depositbal" type="number" step="0.01" placeholder="balance in ETH">
-                <button class="confirmbuttonclass" @click="">
-                  Deposit
-                </button>
-              </li>
-            </ul>
+            <input ref="depositbal" type="number" step="0.01" placeholder="balance in ETH">
+            <button class="confirmbuttonclass" @click="">
+              Deposit
+            </button>
           </div>
           <div class="firstclass funbtnclass">
-            <ul class="ulinputclass">
-              <li class="liinputclass">
-                <input ref="withdrawDeposit" type="number" step="0.01" placeholder="balance in ETH">
-                <button class="confirmbuttonclass" @click="">
-                  Withdraw
-                </button>
-              </li>
-            </ul>
+            <input ref="withdrawDeposit" type="number" step="0.01" placeholder="balance in ETH">
+            <button class="confirmbuttonclass" @click="">
+              Withdraw
+            </button>
           </div>
         </div>
       </b-container>
@@ -127,7 +133,7 @@
         <div class="w-100">
           <a
             class="site-btn float-right font-weight-bold"
-            @click="showUpdateModal=false"
+            @click="update"
           >
             UPDATE
           </a>
@@ -222,6 +228,84 @@ export default {
   destroyed(){
   },
   methods: {
+
+    buy() {
+      this.showBuyModal=false;
+      const initName = "233";
+
+      /*this.$refs.initname.value
+      function strlen(str) {
+        var len = 0;
+        for (var i = 0; i < str.length; i++) {
+
+          var a = str.charAt(i);
+          if (a.match(/[^\x00-\xff]/ig) != null) {
+            len += 2;
+          } else {
+            len += 1;
+          }
+        }
+        return len;
+      }
+      if (strlen(initName)>48) {
+        this.contenttips = '内容长度不超过24个汉字或48个英文字符,现在长度是'+strlen(initName);
+        return;
+      }*/
+
+      const initPrice = this.newPrice;
+      const id = this.selectedBoard;
+      const initDeposit = this.taxPerDay * this.numberOfDays;
+      const artPrice = this.boards[id].price;
+
+      alert(id);
+
+      const data = Object.assign({}, { id, initPrice, initDeposit, artPrice, initName })
+      this.$root.buyAdBoard(data);
+    },
+    update() {
+      this.showBuyModal=false;
+      alert("update");
+    },
+
+    uploadToSmDotMs(imgFile)  {
+      let formData = new FormData();
+      formData.append("smfile", imgFile);
+      return axios({
+        url: "https://sm.ms/api/upload",
+        method: "post",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+    },
+    uploadAdd() {
+      let fileDom = this.$refs.file
+      fileDom.click()
+    },
+    async upload(e) {
+      this.file = e.target.files[0];
+      this.uploadBtn()
+    },
+    async uploadBtn() {
+      this.loading = true
+      let fileDom = this.$refs.file
+      fileDom.setAttribute("type", "text");
+      await this.uploadToSmDotMs(this.file)
+        .then(res => {
+          if (res.status === 200 && res.data.code === "success") {
+            // console.log(res.data.data.url)
+            this.cover = res.data.data.url;
+          } else alert("上传图片失败");
+        })
+        .catch(e => {
+          console.log(e);
+          alert("上传图片失败");
+        }).finally(() => {
+          this.loading = false
+          fileDom.setAttribute("type", "file");
+        })
+    },
+
+
     getHeight:function() {
     },
     getAdBoardData: async function(total) {
@@ -268,7 +352,6 @@ export default {
     color: white;
     width: var(--size);
     height: var(--size);
-    margin: 1.1em;
     text-align: center;
     padding-top: 2em;
     max-width: var(--size) !important;
