@@ -131,9 +131,9 @@
                             <p class="panel-body" v-html="item.body" v-show="showBody[i]"></p>
                         </div>
                         <div class="col-md-4 mt-3 text-right">
-                            <avatar v-for="name in item.speakers" :person="People[name]" class="mr-2"/>
+                            <avatar v-for="name in item.speakers" :person="People[name]" :name="name" class="mr-2"/>
                         </div>
-                    </div>
+                    </div>namename
                   </template>
                   <div class="text-center my-5">
                       <a target="_blank"  href="https://github.com/carboclan/pm/issues/69" class="site-btn big wow fadeInUp" data-wow-delay="0.2s">FIND OUT MORE</a>

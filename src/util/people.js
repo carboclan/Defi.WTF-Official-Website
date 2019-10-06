@@ -8,11 +8,11 @@
 */
 
 export default{
-  Tina: {
+  TinaZheng: {
     image: "tina.jpeg",
     link: "https://twitter.com/tzhen"
   },
-  Fran: {
+  FrancescoRenzi: {
     image: "fran.jpeg",
     link: "https://twitter.com/francescorenzia"
   },
@@ -40,7 +40,7 @@ export default{
     image: "Lasse Clausen @1kx.jpg",
     link: "https://www.linkedin.com/in/lasseclausen/"
   },
-  TinAmeenSoleimania: {
+  AmeenSoleimani: {
     image: "Ameen Soleimani @MolochDAO.jpg",
     link: "https://www.linkedin.com/in/ameen-soleimani-97181942/"
   },
