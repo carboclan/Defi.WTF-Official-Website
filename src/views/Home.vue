@@ -137,7 +137,7 @@
                 class="site-btn big wow fadeInUp"
                 data-wow-delay="0.2s"
               >
-                Live Streaming Archive
+                Streaming
               </a>
             </div>
           </div>
